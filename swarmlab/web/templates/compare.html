@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set nav = "comparar" %}
+{% block title %}Comparar · SwarmLab{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="grow">
+    <h1>Comparar A frente a B</h1>
+    <p class="muted">Dos ideas, o dos versiones de la misma. Cada lado admite varios runs separados por comas o un patrón (<code>idea-a*</code>), para usar las réplicas: con ≥ 2 por lado se aplica una t de Welch; con uno solo, el ruido medido por la calibración, y si no existe, no hay veredicto.</p>
+  </div>
+</div>
+<section class="card">
+  <form method="get" action="/comparar" class="row" style="grid-template-columns: 1fr 1fr auto; align-items: end">
+    <div><label for="a">Lado A</label><input id="a" type="text" name="a" value="{{ a }}" list="run-ids" placeholder="idea-a,idea-a-r2,idea-a-r3"></div>
+    <div><label for="b">Lado B</label><input id="b" type="text" name="b" value="{{ b }}" list="run-ids" placeholder="idea-b*"></div>
+    <div><button type="submit">Comparar</button></div>
+  </form>
+  <datalist id="run-ids">{% for rid in runs %}<option value="{{ rid }}">{% endfor %}</datalist>
+  {% if error %}<p class="error" style="margin-top:.75rem">{{ error }}</p>{% endif %}
+</section>
+{% if md %}
+<section class="card">
+  <div class="markdown">{{ md | md }}</div>
+  {% if path %}<p class="muted small">Guardado en <code>{{ path }}</code>.</p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{
+  "name": "swarmlab",
+  "owner": { "name": "SwarmLab" },
+  "plugins": [
+    {
+      "name": "swarmlab",
+      "source": ".",
+      "description": "Simulador de enjambre de agentes para estresar ideas antes de lanzarlas (skill /swarmlab:swarmlab + CLI + panel web)."
+    }
+  ]
+}

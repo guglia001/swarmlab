@@ -1,0 +1,129 @@
+# Desenlaces reales de los casos de calibración (una tabla por documento semilla de casos/).
+#
+# Todas son campañas «todo o nada» de Verkami (máximo 40 días). Datos tomados de la página pública
+# de cada campaña, consultada el 2026-10-22. Donde se indica, también de capturas de la Wayback Machine.
+#   porcentaje    recaudado / objetivo, redondeado al entero (el valor exacto sale de las cifras)
+#   mecenas       número de «aportaciones» que muestra Verkami
+#   fecha         mes de cierre de la campaña
+# En notas, «seguidores» son los del proyecto en Verkami a fecha de consulta. Se acumulan durante la
+# campaña, así que no miden la audiencia previa.
+#
+# Diseño: 4 parejas emparejadas por tipo de producto, objetivo y precio (éxito / fracaso):
+#   A cómic, mismo editor ......... c01 / c07
+#   B juego de mesa ............... c05 / c03
+#   C libro ilustrado / nostalgia . c04 / c06
+#   D novela de autor novel ....... c08 / c02
+# En las notas figura el nombre real de cada campaña. No debe llegar a los agentes:
+# las semillas están anonimizadas.
+
+[c01-comic-folclore-tormentas]
+resultado = "exito"
+porcentaje = 228
+objetivo_eur = 3500
+recaudado_eur = 7970
+mecenas = 219
+plataforma = "Verkami"
+fecha = "2024-08"
+categoria = "cómic"
+url = "https://www.verkami.com/projects/38736-el-conjurador-de-tormentas-integral"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22): texto, recompensas, objetivo y estado final. Inicio hacia el 24-06-2024: la 1.ª actualización, del 25-06, agradece «este inicio de campaña». Cierre el 03-08-2024 (40 días)."
+riesgo_memoria = "bajo"
+notas = "Real: «El Conjurador de Tormentas (Integral)», Maldragón Editorial (Málaga), guion de César Herce. Pareja A con c07: mismo editor, mismo formato (tapa dura de 22,5×29,5), precio parecido y el mismo tema (folclore de tormentas); c07 sale un año después. El editor es muy activo en Verkami: su perfil muestra 51 campañas propias con éxito (oct-2026; el perfil no enseña las fallidas). Confusores: obra de varios autores, seis de ellos con su propia recompensa de sketch (más gente difundiéndola), y alguna historia ya publicada en la revista Cthulhu. Quitados de la semilla: lo añadido a mitad de campaña (una figura de 15 cm como complemento y un original A3) y los pies de foto de «objetivo desbloqueado». Seguidores: 251. No he encontrado prensa ni página en Wikipedia."
+
+[c02-novela-thriller-psicologico]
+resultado = "fracaso"
+porcentaje = 26
+objetivo_eur = 3000
+recaudado_eur = 765
+mecenas = 18
+plataforma = "Verkami"
+fecha = "2025-05"
+categoria = "novela"
+url = "https://www.verkami.com/projects/40678-histeria"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22). Captura de Wayback del 17-04-2025, con la campaña en curso: 3 %, 6 aportaciones, 115 €, quedan 38 días. Campaña de 40 días, del 15-04 al 25-05-2025 aprox."
+riesgo_memoria = "bajo"
+notas = "Real: «Histeria», de Paula López (Bilbao). Pareja D con c08: novela de autor novel con objetivo y precios parecidos. Es el primer proyecto de la autora y su perfil no muestra ningún otro. Confusor: no publicó ni una actualización durante la campaña y el texto es corto, así que el esfuerzo de difusión parece bajo. Porcentaje exacto: 25,5 %. Seguidores: 19. No he encontrado prensa."
+
+[c03-juego-quimica-educativo]
+resultado = "fracaso"
+porcentaje = 24
+objetivo_eur = 5000
+recaudado_eur = 1213
+mecenas = 30
+plataforma = "Verkami"
+fecha = "2025-06"
+categoria = "juego de mesa"
+url = "https://www.verkami.com/projects/40124-primigenia"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22). Buena parte de la oferta está en imágenes, que leí una a una: componentes, reglas, recompensas, metas, equipo y calendario (del 13-05 al 22-06-2025, 40 días)."
+riesgo_memoria = "bajo"
+notas = "Real: «Primigenia», Tero Ediciones (Córdoba); diseño de Pablo Ortega e ilustración de Mili Koey. Pareja B con c05: los dos son juegos de mesa de una editorial pequeña con campañas previas, con el mismo objetivo y un precio parecido. La editorial tuvo 5 campañas con éxito en Verkami entre 2017 y 2020 (112-185 %, 154-308 aportaciones); esta llega cinco años después, con la comunidad quizá enfriada. Posible factor: un enfoque muy educativo (packs con talleres sobre la LOMLOE). Seguidores: 94. No he encontrado prensa."
+
+[c04-album-bestiario-iberico]
+resultado = "exito"
+porcentaje = 225
+objetivo_eur = 4000
+recaudado_eur = 9017
+mecenas = 339
+plataforma = "Verkami"
+fecha = "2023-07"
+categoria = "libro ilustrado (folclore, con formato de álbum de cromos)"
+url = "https://www.verkami.com/projects/35952-album-bestial-de-la-espana-magica"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22). El texto dice que «la campaña dura 40 días». Inicio hacia el 06-06-2023 (el sorteo de las primeras 48 horas cerró el 08-06); cierre el 16-07-2023."
+riesgo_memoria = "bajo"
+notas = "Real: «Álbum Bestial de la España Mágica», Iberian Creatures (David Mallo y Elena Coco, Madrid). Pareja C con c06: libro ilustrado de cultura popular con el mismo objetivo. Es su primer proyecto en Verkami, pero hay confusores de audiencia: el prólogo es del youtuber y escritor Miguel de Lys; los autores llevan desde 2018 la tienda online Culters.store, y Mallo diseña para bandas de metal internacionales y es coautor de un libro sobre Helloween. Las metas adicionales aparecen como «nuevo objetivo», así que probablemente se añadieron durante la campaña; en la semilla van sin importes. Es el caso más antiguo (2023). Seguidores: 372. No he encontrado prensa."
+
+[c05-juego-escape-abuela]
+resultado = "exito"
+porcentaje = 160
+objetivo_eur = 5000
+recaudado_eur = 8019
+mecenas = 239
+plataforma = "Verkami"
+fecha = "2024-11"
+categoria = "juego de mesa"
+url = "https://www.verkami.com/projects/37457-butter-crime-juego-de-escape-y-deduccion"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22). Inicio el 07-10-2024 (1.ª actualización: «¡Arranca la campaña!») y cierre el 16-11-2024: 40 días."
+riesgo_memoria = "bajo"
+notas = "Real: «Butter Crime», Caravan Games (Alicante), editorial de una sola persona (Sejo Mora). Pareja B con c03. Tenía una campaña previa con éxito en Verkami: tres juegos de cartas en 2022 (173 %, 169 aportaciones, 7.776 €). Hay una comunidad previa activa: según la 1.ª actualización, llevaba un 8 % a los 15 minutos. La página enlaza tres vídeos de YouTube y una demo jugable. Quitado de la semilla: «Objetivo inicial completado». Seguidores: 365. No he encontrado prensa."
+
+[c06-libro-robot-anime]
+resultado = "fracaso"
+porcentaje = 18
+objetivo_eur = 4000
+recaudado_eur = 700
+mecenas = 16
+plataforma = "Verkami"
+fecha = "2025-06"
+categoria = "libro de divulgación (cultura popular, anime)"
+url = "https://www.verkami.com/projects/40699-mazinger-punos-fuera"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22) y dos capturas de Wayback: 23-04-2025 (antes del lanzamiento: 0 %, «40 días») y 08-06-2025 (17 %, 16 aportaciones, 700 €, quedan 4 días). Deduzco 40 días, del 03-05 al 12-06-2025 aprox.; el texto preveía cerrar a finales de mayo."
+riesgo_memoria = "bajo"
+notas = "Real: «¡Mazinger! ¡Puños Fuera!», Dolmen Editorial (Palma), autor Jesús Romero Recio. Pareja C con c04. La editorial está establecida y tiene 4 campañas con éxito en Verkami, entre ellas un libro de nostalgia sobre el pinball (339 % en 2022). El autor ya tenía un libro sobre la serie y un blog de referencia. Confusor: muy poca comunicación (0 actualizaciones, texto corto). La serie es muy conocida, pero la campaña no; mantengo «Mazinger Z» en la semilla porque es el argumento de venta. Porcentaje exacto: 17,5 % (Verkami mostraba 17 %). Seguidores: 33. No he encontrado prensa."
+
+[c07-tebeo-nube-familiar]
+resultado = "fracaso"
+porcentaje = 17
+objetivo_eur = 3200
+recaudado_eur = 546
+mecenas = 21
+plataforma = "Verkami"
+fecha = "2025-07"
+categoria = "cómic"
+url = "https://www.verkami.com/projects/41105-claudio-el-pequeno-nubeiro"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22) y captura de Wayback del 15-07-2025 (16 %, 20 aportaciones, 522 €, quedan 12 días). Campaña de 40 días, del 17-06 al 27-07-2025 aprox."
+riesgo_memoria = "bajo"
+notas = "Real: «Claudio, el pequeño nubeiro», Maldragón Editorial (Málaga); guion de Elchinodepelocrespo y dibujo de Pahito. Pareja A con c01, del mismo editor. El editor lo anunció a los mecenas de c01 («tenemos proyecto abierto») y aun así fracasó. El guionista ya había sacado tres cómics con este editor en Verkami en 2023: Gilgamesh, Always Halloween y Historia del príncipe Alcaraván (117-134 %, 95-168 aportaciones). La diferencia con c01: público familiar frente a adulto, dos autores frente a seis y menos recompensas. Seguidores: 40. No he encontrado prensa."
+
+[c08-novela-fantasia-oscura]
+resultado = "exito"
+porcentaje = 169
+objetivo_eur = 2500
+recaudado_eur = 4215
+mecenas = 101
+plataforma = "Verkami"
+fecha = "2024-10"
+categoria = "novela"
+url = "https://www.verkami.com/projects/38621-nefilim"
+fuente = "Página de la campaña en Verkami (consulta 2026-10-22). Inicio hacia el 09-09-2024: la 1.ª actualización, del 11-09, habla de un «49 % en dos días». Cierre el 19-10-2024 (40 días)."
+riesgo_memoria = "bajo"
+notas = "Real: «Nefilim», de Sergio R. Sánchez (Ponferrada), editado con Círculo Rojo (autoedición). Pareja D con c02. Es el primer proyecto del autor. Confusor: el autor es librero en una tienda de cómic y manga y había librerías participando (red local y clientela). Al 49 % en dos días: arranque apoyado en una comunidad previa. Quitado de la semilla el texto añadido después: «están desbloqueadas las dos primeras metas». Seguidores: 121. No he encontrado prensa."

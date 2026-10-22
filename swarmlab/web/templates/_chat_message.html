@@ -1,0 +1,6 @@
+<div class="msg">
+  {% if message %}<div class="q">Tú: {{ message }}</div>{% endif %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if command %}<pre>{{ command }}</pre>{% endif %}
+  {% if answer %}<div class="a markdown">{{ answer | md }}</div>{% endif %}
+</div>

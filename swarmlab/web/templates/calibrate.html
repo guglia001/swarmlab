@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set nav = "calibracion" %}
+{% block title %}Calibración · SwarmLab{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="grow">
+    <h1>Calibración</h1>
+    <p class="muted">¿Distinguen las métricas una idea de otra? Con réplicas, mide el ruido (ICC y diferencia mínima detectable). Con un TOML de desenlaces reales, mide si las métricas separan éxitos de fracasos (AUC con p de permutación).</p>
+  </div>
+</div>
+<section class="card">
+  <form method="get" action="/calibracion" class="row" style="grid-template-columns: 1fr 1fr auto; align-items: end">
+    <div><label for="runs">Runs <span class="hint">(ideas con ≥ 2 réplicas para el ruido)</span></label><input id="runs" type="text" name="runs" value="{{ spec }}" placeholder="cal-*" list="run-ids"></div>
+    <div><label for="outcomes">Desenlaces reales <span class="hint">(TOML, opcional)</span></label><input id="outcomes" type="text" name="outcomes" value="{{ outcomes }}" placeholder="calibracion/casos.toml"></div>
+    <div><button type="submit">Calcular</button></div>
+  </form>
+  <datalist id="run-ids">{% for rid in run_ids %}<option value="{{ rid }}">{% endfor %}</datalist>
+  {% if error %}<p class="error" style="margin-top:.75rem">{{ error }}</p>{% endif %}
+  <p class="muted small" style="margin-top:.75rem">Ruido de referencia actual: {% if noise %}guardado el {{ noise.created_at | dt }} a partir de {{ noise.ideas }} ideas y {{ noise.runs }} runs. Lo usa <a href="/comparar">Comparar</a> cuando un lado tiene un solo run.{% else %}ninguno. Calcula con réplicas y pulsa «Guardar como referencia».{% endif %}</p>
+</section>
+{% if md %}
+<section class="card">
+  {% if can_save %}
+  <form method="post" action="/calibracion/guardar" class="toolbar">
+    <input type="hidden" name="runs" value="{{ spec }}">
+    <button class="secondary sm" type="submit">Guardar como ruido de referencia</button>
+    <span class="muted small">escribe <code>runs/_calibration/ruido.json</code></span>
+  </form>
+  {% endif %}
+  {% if saved %}<p class="notice good">{{ saved }}</p>{% endif %}
+  <div class="markdown">{{ md | md }}</div>
+</section>
+{% endif %}
+{% endblock %}

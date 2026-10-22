@@ -1,0 +1,62 @@
+<button class="icon-btn close" type="button" data-close-drawer aria-label="Cerrar">✕</button>
+<div class="drawer-head">
+  <span class="avatar lg">{{ p.handle[:2] | upper }}</span>
+  <div>
+    <h2>@{{ p.handle }}{% if p.influencer %} <span class="badge plain">influencer</span>{% endif %}</h2>
+    <div class="muted small">{{ p.name }}, {{ p.age }} · {{ p.occupation }}</div>
+  </div>
+</div>
+<p class="small">{{ p.bio }}</p>
+<dl class="kv">
+  <dt>Segmento</dt><dd>{{ p.segment }}</dd>
+  <dt>Arquetipo</dt><dd>{{ p.archetype }}</dd>
+  <dt>Hoy</dt><dd>{{ p.current_solution or "—" }}</dd>
+  <dt>Implicación</dt><dd>{{ p.involvement }} · actividad {{ "%.0f%%" | format(p.activity * 100) }}</dd>
+  <dt>Valores</dt><dd>{% for v in p["values"] %}<span class="trait">{{ v }}</span>{% endfor %}</dd>
+  <dt>Rasgos</dt><dd>{% for k, v in traits %}<span class="trait">{{ k }} {{ v }}</span>{% endfor %}</dd>
+  <dt>Estilo</dt><dd class="small">{{ p.writing_style }}</dd>
+  <dt>Postura</dt><dd>{{ p.initial_stance | stance }} → {{ final | stance }} {{ spark }}</dd>
+</dl>
+{% if p.first_impression %}
+<h3>Primera impresión</h3>
+<div class="quote">«{{ p.first_impression }}»</div>
+{% endif %}
+
+{% if answer %}
+<h3>Encuesta final</h3>
+<dl class="kv">
+  <dt>Papel</dt><dd>{{ answer.role }}</dd>
+  <dt>Elige</dt><dd><b>{{ answer.choice }}</b> frente a: {{ answer.current_alternative }}</dd>
+  <dt>Intención</dt><dd>{{ answer.intent }} · Juster {{ answer.purchase_probability }}/10</dd>
+  <dt>Pagaría</dt><dd>{{ answer.would_pay }}{% if answer.would_pay == "si" %} (seguridad {{ answer.pay_certainty }}/10){% endif %}{% if answer.max_price is not none %} · máx. {{ answer.max_price }}{% endif %} · justo: {{ answer.fair_price }}</dd>
+  <dt>Mañana</dt><dd>{{ answer.commitment }}</dd>
+  <dt>Por qué</dt><dd>{{ answer.reason }}</dd>
+  <dt>Lo que le frena</dt><dd>{{ answer.deal_breaker }}</dd>
+  <dt>Cambiaría de idea si</dt><dd>{{ answer.would_change_mind }}</dd>
+</dl>
+{% endif %}
+
+{% if decisions %}
+<h3>Qué pensó en cada ronda</h3>
+{% for d in decisions %}
+<div class="quote small"><b>Ronda {{ d.round }}</b> · {{ d.stance_before | stance }} → {{ d.stance_after | stance }}<br>{{ d.reasoning }}</div>
+{% endfor %}
+{% endif %}
+
+{% if posts %}
+<h3>Sus posts ({{ posts | length }})</h3>
+{% for post in posts %}
+<div class="quote small"><span class="muted">ronda {{ post.round }} · {{ post.kind }} · ♥ {{ post.likes or 0 }} ↻ {{ post.reposts or 0 }} 💬 {{ post.replies or 0 }}</span><br>{{ post.text }}</div>
+{% endfor %}
+{% endif %}
+
+<h3>Entrevista en personaje</h3>
+<p class="muted small">Responde como @{{ p.handle }}, con su memoria de la simulación. Cada pregunta es una llamada al modelo medio{% if dry %} (dry-run: respuesta simulada){% endif %}.</p>
+<div id="interview-log">
+  {% for t in transcript %}<div class="msg">{% if t.role == "user" %}<div class="q">Tú: {{ t.content }}</div>{% else %}<div class="a markdown">{{ t.content | md }}</div>{% endif %}</div>{% endfor %}
+</div>
+<form class="chat-form" hx-post="/runs/{{ run_id }}/interview/{{ p.handle }}" hx-target="#interview-log" hx-swap="beforeend" hx-indicator="#iv-wait" hx-on::after-request="if (event.detail.successful) this.reset()">
+  <input type="text" name="message" placeholder="¿Qué te haría cambiar de opinión?" autocomplete="off" required>
+  <button type="submit">Preguntar</button>
+  <span id="iv-wait" class="htmx-indicator muted small">pensando…</span>
+</form>

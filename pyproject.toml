@@ -1,0 +1,49 @@
+[project]
+name = "swarmlab"
+version = "0.1.0"
+description = "Simulador de enjambre de agentes para estresar ideas de negocio, usando Claude Code headless (claude -p)."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pydantic>=2.9",
+    "networkx>=3.3",
+    "typer>=0.12",
+    "rich>=13.7",
+    "pypdf>=5.0",
+    "pyyaml>=6.0",
+    "matplotlib>=3.9",
+    "markdown-it-py>=3.0",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.9",
+    "fpdf2>=2.8.9",
+]
+
+[project.scripts]
+swarmlab = "swarmlab.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.7",
+    "httpx2>=2.16.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003", "UP046", "UP047", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+runs/
+config.toml
+.env
+dist/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/

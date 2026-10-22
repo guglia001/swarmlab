@@ -1,0 +1,41 @@
+<section class="card">
+  <h2>Eventos «modo dios»</h2>
+  {% if events %}
+  <table>
+    <thead><tr><th>Id</th><th class="num">Ronda</th><th>Titular</th><th>Fuente</th><th>Origen</th><th>Post</th></tr></thead>
+    <tbody>
+    {% for e in events %}
+      <tr>
+        <td><code>{{ e.id }}</code></td>
+        <td class="num">{{ e.round }}{% if e.round <= current_round %} <span class="badge plain" title="ya se jugó">✓</span>{% endif %}</td>
+        <td><b>{{ e.title }}</b>{% if e.text and e.text != e.title %}<div class="small muted">{{ e.text }}</div>{% endif %}</td>
+        <td>{{ e.source }} <span class="muted">@{{ e.handle }}</span></td>
+        <td class="small">{{ {"yaml": "YAML", "interactive": "interactivo", "cli": "inyectado", "auto": "anuncio automático", "web": "panel"}.get(e.origin, e.origin) }}</td>
+        <td>{% if e.post_id %}<code>{{ e.post_id }}</code>{% else %}<span class="muted">—</span>{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}<p class="muted">Sin eventos.</p>{% endif %}
+</section>
+<section class="card">
+  <h2>Inyectar un evento</h2>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if can_inject %}
+  <p class="muted small">Aparecerá fijado en todos los feeds en la ronda que elijas (una que aún no se haya jugado: la última completada es la {{ current_round }} de {{ rounds }}).{% if not live %} Después, reanuda el run.{% endif %}</p>
+  <form method="post" action="/runs/{{ run_id }}/inject">
+    <div class="row">
+      <div><label for="ev-round">Ronda</label><input id="ev-round" type="number" name="round" min="{{ current_round + 1 }}" max="{{ rounds }}" value="{{ current_round + 1 }}" required></div>
+      <div><label for="ev-source">Fuente</label><input id="ev-source" type="text" name="source" value="Noticias"></div>
+      <div><label for="ev-handle">Handle</label><input id="ev-handle" type="text" name="handle" value="noticias"></div>
+    </div>
+    <label for="ev-title">Titular</label>
+    <input id="ev-title" type="text" name="title" required placeholder="Un competidor baja el precio a la mitad">
+    <label for="ev-text">Texto <span class="hint">(opcional)</span></label>
+    <textarea id="ev-text" name="text" rows="3"></textarea>
+    <p><button type="submit">Añadir a la ronda</button></p>
+  </form>
+  {% else %}
+  <p class="muted">La simulación ya ha jugado todas sus rondas; no quedan rondas en las que inyectar eventos.</p>
+  {% endif %}
+</section>

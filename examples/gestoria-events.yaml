@@ -1,0 +1,21 @@
+# Eventos inyectados ("modo dios") para examples/gestoria-ia.md
+# Campos: round (obligatorio), title (obligatorio), text, source (quién lo publica), handle (cuenta).
+events:
+  - round: 4
+    title: "Hacienda advierte sobre errores en declaraciones hechas con IA"
+    source: "Agencia Tributaria"
+    handle: "aeat_noticias"
+    text: >-
+      La Agencia Tributaria publica una nota informativa en la que alerta de un aumento de errores en
+      autoliquidaciones trimestrales preparadas con herramientas de inteligencia artificial y recuerda
+      que el obligado tributario es siempre responsable de lo que presenta, aunque lo haga un tercero.
+      Anuncia más comprobaciones sobre los modelos 303 y 130.
+  - round: 6
+    title: "Un influencer financiero conocido recomienda Gestoría Lince"
+    source: "Pablo Finanzas (1,2 M de seguidores)"
+    handle: "pablofinanzas"
+    text: >-
+      "Llevo tres trimestres con Gestoría Lince y me he ahorrado más de 900 € frente a mi gestoría de
+      siempre. La IA me pregunta lo que no entiende y un asesor revisó mi caso cuando se lo pedí. Para
+      autónomos con cuentas sencillas, ahora mismo es lo más rentable que conozco", dice en un vídeo
+      para sus seguidores.

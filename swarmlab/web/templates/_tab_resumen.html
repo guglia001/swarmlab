@@ -1,0 +1,104 @@
+{% if not metrics %}
+<section class="card">
+  <h2>Resumen</h2>
+  <p class="muted">Todavía no hay rondas terminadas{% if live %}: la simulación está en marcha y esta pestaña se actualizará sola{% endif %}.</p>
+  {% if brief_md %}<details open><summary>Escenario (brief)</summary><div class="markdown">{{ brief_md | md }}</div></details>{% endif %}
+</section>
+{% else %}
+<div class="grid two">
+  <section class="card">
+    <h2>Postura media por ronda</h2>
+    {{ svg_stance }}
+    <p class="muted small">De {{ summary.initial.mean | stance }} al inicio a {{ summary.final.mean | stance }} al final ({{ "%+.2f" | format(summary.delta_mean) }}). Polarización final {{ "%.2f" | format(summary.final.polarization) }}.</p>
+  </section>
+  <section class="card">
+    <h2>Reparto de posturas</h2>
+    {{ svg_dist }}
+    <div class="legend"><span><i class="dot con"></i>muy en contra / en contra</span><span><i class="dot mid"></i>neutral</span><span><i class="dot pro"></i>a favor / muy a favor</span></div>
+    {% if cfg.get("stance_mode") != "impresion" %}<p class="notice warn small">Modo cuotas: la distribución inicial la fija el plan de cuotas, no la idea. Mira el cambio, no el nivel.</p>{% endif %}
+  </section>
+</div>
+
+{% if survey_blocks %}
+<section class="card">
+  <h2>Encuesta final <span class="muted small">· métricas principales, con intervalo de Wilson al 95 %</span></h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Grupo</th><th class="num">n</th><th>Intención</th><th class="num">Adopción</th><th class="num">Eligen la propuesta</th><th class="num">Prob. de compra (Juster)</th><th class="num">Pagarían</th><th class="num">Seguros ≥ 8</th><th class="num">Firmes</th></tr></thead>
+    <tbody>
+    {% for name, b, svg in survey_blocks %}
+      <tr>
+        <td><b>{{ name }}</b></td>
+        <td class="num">{{ b.n }}</td>
+        <td>{{ svg }}</td>
+        <td class="num"><b>{{ "%.2f" | format(b.adoption_index) }}</b></td>
+        <td class="num">{{ b.choice_share | pctci(b.choice_ci) }}</td>
+        <td class="num">{{ b.juster_mean | pct }}</td>
+        <td class="num">{{ b.would_pay_share | pctci(b.would_pay_ci) }}</td>
+        <td class="num">{{ b.would_pay_certain_share | pct }}</td>
+        <td class="num">{{ b.firm_share | pctci(b.firm_ci) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <div class="legend"><span><i class="dot pro"></i>sí</span><span><i class="dot pro" style="opacity:.55"></i>probablemente</span><span><i class="dot mid"></i>quizá</span><span><i class="dot con"></i>no</span><span class="muted">· «Clientes» = público objetivo, lo compren o no. Detalle en la pestaña Encuesta.</span></div>
+</section>
+{% endif %}
+
+<div class="grid two">
+  <section class="card">
+    <h2>Por segmento</h2>
+    {{ svg_segments }}
+  </section>
+  <section class="card">
+    <h2>Quién movió la conversación</h2>
+    {% if summary.influencers %}
+    <table>
+      <thead><tr><th>Agente</th><th class="num">Eco</th><th class="num">Seguidores</th><th class="num">Posts</th></tr></thead>
+      <tbody>
+      {% for i in summary.influencers[:8] %}
+      <tr><td><button class="handle-link" hx-get="/runs/{{ run_id }}/agents/{{ i.handle }}" hx-target="#drawer">@{{ i.handle }}</button></td><td class="num">{{ i.engagement }}</td><td class="num">{{ i.followers }}</td><td class="num">{{ i.posts }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="muted small">Nadie destaca todavía.</p>{% endif %}
+    {% if switchers %}
+    <h3>Cambiaron de bando</h3>
+    <ul class="small">
+      {% for s in switchers[:8] %}<li><button class="handle-link" hx-get="/runs/{{ run_id }}/agents/{{ s.handle }}" hx-target="#drawer">@{{ s.handle }}</button>: {{ s.from | stance }} → {{ s.to | stance }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+</div>
+
+{% if narratives %}
+<section class="card">
+  <h2>Narrativas</h2>
+  <div class="grid three">
+  {% for n in narratives %}
+    <div class="quote">
+      <b>{{ n.label }}</b> <span class="badge plain">{{ n.stance }}</span> <span class="muted small">· {{ n.volume }} posts{% if n.peak_round %} · pico en la ronda {{ n.peak_round }}{% endif %}</span>
+      <div class="small">{{ n.description }}</div>
+      {% if n.top_authors %}<div class="muted small">{{ n.top_authors | join(", ") }}</div>{% endif %}
+    </div>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if summaries %}
+<section class="card">
+  <h2>Ronda a ronda</h2>
+  {% for s in summaries %}
+  <p class="small"><b>Ronda {{ s.round }}</b>{% if s.mood %} · <span class="muted">{{ s.mood }}</span>{% endif %}<br>{{ s.narrative }}</p>
+  {% endfor %}
+</section>
+{% endif %}
+
+{% if brief_md %}
+<section class="card">
+  <details><summary>Escenario (brief que vieron los agentes)</summary><div class="markdown">{{ brief_md | md }}</div></details>
+</section>
+{% endif %}
+{% endif %}

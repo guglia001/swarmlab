@@ -1,0 +1,15 @@
+# Configuración de los runs de calibración: la de cribado (sin opus, 20 agentes × 5 rondas) con la
+# postura inicial medida, la encuesta final y sin informe del modelo pesado (solo hacen falta métricas).
+MODEL_HEAVY = "sonnet"
+MODEL_MEDIUM = "sonnet"
+MODEL_LIGHT = "haiku"
+MAX_CONCURRENCY = 3
+AGENTS_PER_CALL = 7
+PERSONA_BATCH = 10
+MAX_CALLS_PER_RUN = 120
+DEFAULT_AGENTS = 20
+DEFAULT_ROUNDS = 5
+ROUND_INTERVAL = "3 días"
+STANCE_MODE = "impresion"
+SURVEY = true
+REPORT_LLM = false

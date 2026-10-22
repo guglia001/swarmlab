@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% set nav = "nueva" %}
+{% block title %}Nueva simulación · SwarmLab{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="grow">
+    <h1>Nueva simulación</h1>
+    <p class="muted">Sube el documento semilla o pega el texto. La estimación de llamadas y tiempo se actualiza sola.</p>
+  </div>
+</div>
+{% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+<form id="new-form" method="post" action="/runs" enctype="multipart/form-data">
+<div class="grid two" style="grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); align-items: start">
+  <div>
+    <section class="card">
+      <h2>1. La idea</h2>
+      <div class="row">
+        <div>
+          <label for="seed">Documento semilla <span class="hint">({{ suffixes }})</span></label>
+          <input id="seed" type="file" name="seed" accept="{{ suffixes }}">
+        </div>
+        <div>
+          <label for="example">…o un ejemplo incluido</label>
+          <select id="example" name="example">
+            <option value="">—</option>
+            {% for value, label in examples %}<option value="{{ value }}"{% if form.example == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+      <label for="seed_text">…o pega el texto de la propuesta <span class="hint">(se guarda como semilla.md)</span></label>
+      <textarea id="seed_text" name="seed_text" rows="6" placeholder="# Mi idea&#10;&#10;Qué es, para quién, a qué precio, qué hace hoy esa gente en su lugar…">{{ form.seed_text }}</textarea>
+      <label for="question">Pregunta que debe responder la simulación</label>
+      <input id="question" type="text" name="question" value="{{ form.question }}" placeholder="¿Cómo reaccionará el público al que se dirige y cuánta gente la apoyaría con su dinero?">
+      <label for="run_id">Id del run <span class="hint">(opcional; por defecto fecha + semilla)</span></label>
+      <input id="run_id" type="text" name="run_id" value="{{ form.run_id }}" placeholder="mi-idea-v1" pattern="[A-Za-z0-9][\w.\-]*">
+    </section>
+
+    <section class="card">
+      <h2>2. La población y la conversación</h2>
+      <div class="row">
+        <div><label for="agents">Agentes</label><input id="agents" type="number" name="agents" min="10" max="200" value="{{ form.agents }}"></div>
+        <div><label for="rounds">Rondas</label><input id="rounds" type="number" name="rounds" min="1" max="100" value="{{ form.rounds }}"></div>
+        <div><label for="agents_per_call">Agentes por llamada</label><input id="agents_per_call" type="number" name="agents_per_call" min="1" max="20" value="{{ form.agents_per_call }}"></div>
+        <div><label for="interval">Tiempo simulado por ronda</label><input id="interval" type="text" name="interval" value="{{ form.interval }}" placeholder="{{ settings.round_interval }}"></div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="stance_mode">Postura inicial</label>
+          <select id="stance_mode" name="stance_mode">
+            {% for value, label in [("impresion", "medida (primera impresión)"), ("cuotas", "fijada por cuotas (test de estrés)")] %}<option value="{{ value }}"{% if form.stance_mode == value %} selected{% endif %}>{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="platform">Plataforma</label>
+          <select id="platform" name="platform">
+            {% for p, label in [("twitter", "red social (posts cortos)"), ("forum", "foro (hilos largos)")] %}<option value="{{ p }}"{% if form.platform == p %} selected{% endif %}>{{ label }}</option>{% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="personas_from">Reutilizar la población de… <span class="hint">(A/B)</span></label>
+          <select id="personas_from" name="personas_from">
+            <option value="">— población nueva —</option>
+            {% for rid in runs %}<option value="{{ rid }}"{% if form.personas_from == rid %} selected{% endif %}>{{ rid }}</option>{% endfor %}
+          </select>
+        </div>
+        <div><label for="language">Idioma de los agentes <span class="hint">(opcional)</span></label><input id="language" type="text" name="language" value="{{ form.language }}" placeholder="el del documento"></div>
+      </div>
+      <label class="check"><input type="checkbox" name="survey" value="1"{% if form.survey %} checked{% endif %}> Encuesta final de compra en personaje (elección forzada, Juster, pago, precio, compromiso)</label>
+      <label class="check"><input type="checkbox" name="report_llm" value="1"{% if form.report_llm %} checked{% endif %}> Informe y narrativas con el modelo pesado <span class="hint">(sin marcar: solo métricas y encuesta, 2 llamadas y ~4 min menos)</span></label>
+      <label class="check"><input type="checkbox" name="dry_run" value="1"{% if form.dry_run %} checked{% endif %}> Dry-run: sin llamar a Claude, respuestas deterministas <span class="hint">(para probar el panel)</span></label>
+    </section>
+
+    <section class="card">
+      <h2>3. Eventos «modo dios» <span class="hint">(opcional)</span></h2>
+      <p class="muted small">Noticias, anuncios o reacciones que aparecen en una ronda concreta, fijados en todos los feeds. El anuncio de la propuesta en la ronda 1 se añade solo. También puedes inyectarlos después, desde la pestaña Eventos de cada run.</p>
+      <div class="row">
+        <div><label for="events">YAML de eventos</label><input id="events" type="file" name="events" accept=".yaml,.yml"></div>
+      </div>
+      <label for="events_text">…o escríbelos aquí</label>
+      <textarea id="events_text" name="events_text" rows="5" class="mono" placeholder="events:&#10;  - round: 3&#10;    title: &quot;Hacienda avisa de que revisará las declaraciones hechas con IA&quot;&#10;    source: &quot;Agencia Tributaria&quot;&#10;    handle: aeat">{{ form.events_text }}</textarea>
+    </section>
+
+    <details>
+      <summary>Avanzado</summary>
+      <div class="row">
+        <div><label for="rng_seed">Semilla aleatoria</label><input id="rng_seed" type="number" name="rng_seed" value="{{ form.rng_seed }}"></div>
+        <div><label for="max_calls">Tope de llamadas <span class="hint">(por defecto {{ settings.max_calls_per_run }})</span></label><input id="max_calls" type="number" name="max_calls" min="10" value="{{ form.max_calls }}"></div>
+      </div>
+      <p class="muted small">Modelos: pesado <code>{{ settings.model_heavy }}</code>, medio <code>{{ settings.model_medium }}</code>, ligero <code>{{ settings.model_light }}</code>; concurrencia {{ settings.max_concurrency }}. Se cambian en <code>config.toml</code> (ver <a href="/ajustes">Ajustes</a>).</p>
+    </details>
+  </div>
+
+  <div>
+    <section class="card" style="position: sticky; top: 64px">
+      <h2>Estimación</h2>
+      <div id="estimate" hx-post="/estimate" hx-trigger="load, change from:#new-form delay:400ms, keyup from:#new-form delay:800ms" hx-include="#new-form" hx-encoding="multipart/form-data" hx-swap="innerHTML">
+        <p class="muted small">Calculando…</p>
+      </div>
+      <p style="margin-top: 1rem"><button type="submit" style="width: 100%; justify-content: center">Lanzar simulación</button></p>
+      <p class="muted small">Cada run abre hasta {{ settings.max_concurrency }} procesos <code>claude -p</code>. El panel ejecuta como mucho {{ settings.web_parallel_runs }} runs a la vez; el resto espera en cola.</p>
+    </section>
+  </div>
+</div>
+</form>
+{% endblock %}

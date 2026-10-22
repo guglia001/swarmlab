@@ -1,0 +1,40 @@
+{% if not agents %}
+<section class="card"><h2>Agentes</h2><p class="muted">La población todavía no se ha generado.</p></section>
+{% else %}
+<div class="grid two" style="grid-template-columns: minmax(0, 1fr) minmax(300px, 640px)">
+  <section class="card">
+    <h2>Población <span class="muted small">· {{ agents | length }} agentes</span></h2>
+    <form class="toolbar" hx-get="/runs/{{ run_id }}/tab/agentes" hx-target="#tab-content" hx-trigger="change">
+      <select name="segment" aria-label="Segmento">
+        <option value="">Todos los segmentos</option>
+        {% for s in segments %}<option value="{{ s }}"{% if s == segment %} selected{% endif %}>{{ s }}</option>{% endfor %}
+      </select>
+      <select name="side" aria-label="Postura">
+        <option value="">Cualquier postura</option>
+        {% for v, label in [("pro", "a favor"), ("mid", "indecisos"), ("con", "en contra"), ("switch", "cambiaron de bando"), ("influencer", "influencers")] %}<option value="{{ v }}"{% if v == side %} selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <span class="muted small">{{ shown | length }} mostrados · haz clic en uno para ver su ficha, sus posts y entrevistarlo</span>
+    </form>
+    <div class="agent-grid">
+      {% for a in shown %}
+      <div class="agent" hx-get="/runs/{{ run_id }}/agents/{{ a.handle }}" hx-target="#drawer" title="{{ a.name }}, {{ a.age }}, {{ a.occupation }}">
+        <span class="avatar">{{ a.handle[:2] | upper }}</span>
+        <div style="min-width: 0">
+          <div class="name truncate">@{{ a.handle }}{% if a.influencer %} <span class="badge plain" title="influencer">★</span>{% endif %}</div>
+          <div class="seg truncate">{{ a.segment }}</div>
+        </div>
+        <div class="right">
+          {{ a.spark }}
+          <div class="small">{{ a.initial | stance }} → {{ a.final | stance }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="card">
+    <h2>Red de seguimiento</h2>
+    {{ svg_network }}
+    <div class="legend"><span><i class="dot pro"></i>a favor</span><span><i class="dot mid"></i>indeciso</span><span><i class="dot con"></i>en contra</span><span class="muted">· tamaño = seguidores dentro de la simulación · clic en un nodo abre su ficha</span></div>
+  </section>
+</div>
+{% endif %}

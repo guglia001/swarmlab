@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set nav = "ajustes" %}
+{% block title %}Ajustes · SwarmLab{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="grow">
+    <h1>Ajustes</h1>
+    <p class="muted">Configuración efectiva de esta sesión del panel. Se cambia en <code>config.toml</code>, <code>.env</code> o variables <code>SWARMLAB_&lt;CLAVE&gt;</code> y hace falta reiniciar <code>swarmlab web</code>.</p>
+  </div>
+</div>
+<div class="grid two">
+  <section class="card">
+    <h2>Claude Code</h2>
+    <p class="small">Binario <code>{{ settings.claude_bin }}</code>. Modelos: pesado <b>{{ settings.model_heavy }}</b> (ontología e informe), medio <b>{{ settings.model_medium }}</b> (personas, impresión, encuesta, resúmenes, entrevistas), ligero <b>{{ settings.model_light }}</b> (decisiones y memoria).</p>
+    <form hx-post="/ajustes/doctor" hx-target="#doctor" hx-indicator="#doctor-wait">
+      <button class="secondary" type="submit">Comprobar instalación</button>
+      <span id="doctor-wait" class="htmx-indicator muted small">comprobando…</span>
+      <span class="muted small">(sin llamadas al modelo)</span>
+    </form>
+    <div id="doctor"></div>
+  </section>
+  <section class="card">
+    <h2>Datos</h2>
+    <dl class="kv">
+      <dt>Directorio de runs</dt><dd><code>{{ settings.runs_dir }}</code></dd>
+      <dt>Runs</dt><dd>{{ n_runs }}</dd>
+      <dt>Ruido de referencia</dt><dd>{% if noise %}{{ noise.ideas }} ideas, {{ noise.runs }} runs ({{ noise.created_at | dt }}){% else %}no calculado{% endif %}</dd>
+      <dt>Runs en paralelo (panel)</dt><dd>{{ settings.web_parallel_runs }}</dd>
+    </dl>
+  </section>
+</div>
+<section class="card">
+  <h2>Todos los parámetros</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Clave</th><th>Valor</th></tr></thead>
+    <tbody>{% for k, v in rows %}<tr><td><code>{{ k }}</code></td><td>{{ v }}</td></tr>{% endfor %}</tbody>
+  </table>
+  </div>
+</section>
+{% endblock %}

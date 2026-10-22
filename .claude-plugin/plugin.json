@@ -1,0 +1,18 @@
+{
+  "name": "swarmlab",
+  "displayName": "SwarmLab",
+  "description": "Estresa una idea de negocio, un lanzamiento o una política con una población de agentes antes de ejecutarla: primera impresión, conversación simulada, encuesta de compra, réplicas y calibración. Usa tu suscripción de Claude Code (claude -p), sin API key.",
+  "version": "0.2.0",
+  "author": {
+    "name": "SwarmLab"
+  },
+  "keywords": [
+    "simulacion",
+    "agentes",
+    "validacion-de-ideas",
+    "encuesta",
+    "claude-code"
+  ],
+  "repository": "https://github.com/guglia001/swarmlab",
+  "homepage": "https://github.com/guglia001/swarmlab"
+}

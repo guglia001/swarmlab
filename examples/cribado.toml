@@ -1,0 +1,12 @@
+# Configuración de cribado de ideas: más barata que la de producción (sin opus, 20 agentes, 5 rondas).
+MODEL_HEAVY = "sonnet"
+MODEL_MEDIUM = "sonnet"
+MODEL_LIGHT = "haiku"
+MAX_CONCURRENCY = 3
+AGENTS_PER_CALL = 7
+PERSONA_BATCH = 10
+MAX_CALLS_PER_RUN = 120
+DEFAULT_AGENTS = 20
+DEFAULT_ROUNDS = 5
+ROUND_INTERVAL = "3 días"
+SURVEY = true

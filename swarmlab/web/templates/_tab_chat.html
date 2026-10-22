@@ -1,0 +1,13 @@
+<section class="card" id="chat">
+  <h2>Chat con el analista</h2>
+  <p class="muted small">Pregunta sobre el informe y los datos del run. Comandos: <code>/buscar &lt;texto&gt;</code>, <code>/agente &lt;@handle&gt;</code>, <code>/post &lt;id&gt;</code>. Cada pregunta libre es una llamada al modelo medio.</p>
+  <div id="chat-log">
+    {% for t in transcript %}<div class="msg">{% if t.role == "user" %}<div class="q">Tú: {{ t.content }}</div>{% else %}<div class="a markdown">{{ t.content | md }}</div>{% endif %}</div>{% endfor %}
+  </div>
+  <form class="chat-form" hx-post="/runs/{{ run_id }}/chat" hx-target="#chat-log" hx-swap="beforeend"
+        hx-indicator="#chat-wait" hx-on::after-request="if (event.detail.successful) this.reset()">
+    <input type="text" name="message" placeholder="¿Qué objeción tuvo más eco y quién la lanzó?" autocomplete="off" required>
+    <button type="submit">Enviar</button>
+    <span id="chat-wait" class="htmx-indicator muted small">pensando…</span>
+  </form>
+</section>

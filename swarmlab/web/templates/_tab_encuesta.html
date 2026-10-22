@@ -1,0 +1,89 @@
+{% if not survey %}
+<section class="card">
+  <h2>Encuesta final</h2>
+  <p class="muted">Este run no tiene encuesta{% if live %} todavía{% endif %}.</p>
+  {% if can_survey %}
+  <form method="post" action="/runs/{{ run_id }}/survey" class="toolbar">
+    <input type="text" name="question" placeholder="Pregunta de la encuesta (opcional; por defecto la del run)" style="min-width: 320px">
+    <button type="submit">Encuestar ahora</button>
+    <span class="muted small">una llamada al modelo medio por cada 10 agentes</span>
+  </form>
+  {% endif %}
+</section>
+{% else %}
+<section class="card">
+  <h2>Encuesta final <span class="muted small">· «{{ survey.question }}»{% if survey.round %} · tras la ronda {{ survey.round }}{% endif %}</span></h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Grupo</th><th class="num">n</th><th>Intención</th><th class="num">Adopción</th><th class="num">Eligen la propuesta</th><th class="num">Juster</th><th class="num">Pagarían</th><th class="num">Seguros ≥ 8</th><th class="num">Pagarían ya</th><th class="num">Se apuntarían</th><th class="num">Firmes</th><th class="num">Pago ponderado</th></tr></thead>
+    <tbody>
+    {% for name, b, svg in blocks %}
+      <tr>
+        <td><b>{{ name }}</b></td>
+        <td class="num">{{ b.n }}</td>
+        <td>{{ svg }}</td>
+        <td class="num"><b>{{ "%.2f" | format(b.adoption_index) }}</b> <span class="ci">{{ b.yes_or_probably | pctci(b.yes_or_probably_ci) }} sí+prob.</span></td>
+        <td class="num">{{ b.choice_share | pctci(b.choice_ci) }}</td>
+        <td class="num">{{ b.juster_mean | pct }}</td>
+        <td class="num">{{ b.would_pay_share | pctci(b.would_pay_ci) }}</td>
+        <td class="num">{{ b.would_pay_certain_share | pctci(b.would_pay_certain_ci) }}</td>
+        <td class="num">{{ b.pay_now_share | pct }}</td>
+        <td class="num">{{ b.signup_share | pct }}</td>
+        <td class="num">{{ b.firm_share | pctci(b.firm_ci) }}</td>
+        <td class="num">{{ b.pay_weighted | pct }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="muted small">«Clientes» = público al que se dirige la oferta, lo compre o no. «Firmes» = eligen la propuesta, pagarían con seguridad ≥ 8/10 y pagarían ya. Entre corchetes, intervalo de Wilson al 95 %. Las medidas de toda la población (adopción, elección, Juster) fueron las más estables y las que mejor separaron éxitos de fracasos reales en la calibración; las de clientes son ruidosas con pocos clientes.</p>
+  {% if can_survey %}
+  <details><summary>Repetir la encuesta</summary>
+    <form method="post" action="/runs/{{ run_id }}/survey" class="toolbar">
+      <input type="text" name="question" placeholder="Otra pregunta (opcional)" style="min-width: 320px">
+      <label class="check" style="margin:0"><input type="checkbox" name="report" value="1"> regenerar el informe después</label>
+      <button class="secondary sm" type="submit">Encuestar de nuevo</button>
+    </form>
+  </details>
+  {% endif %}
+</section>
+
+<div class="grid two">
+  <section class="card">
+    <h2>Precio</h2>
+    {% if price %}
+    <p class="small">Referencia: <b>{{ price.reference }} {{ price.unit }}</b> · {{ price.n }} clientes con precio · mediana del máximo que pagarían <b>{{ price.median }}</b> (p25 {{ price.p25 }}, p75 {{ price.p75 }}) · pagarían el de referencia: <b>{{ price.at_reference_share | pctci(price.at_reference_ci) }}</b></p>
+    {{ svg_price }}
+    {% else %}<p class="muted small">Sin precio de referencia en la propuesta (o nadie dio un precio máximo), así que no hay curva.</p>{% endif %}
+  </section>
+  <section class="card">
+    <h2>Lo que frena y lo que convencería</h2>
+    {% if survey.summary.deal_breakers %}<h3>Frenos (de quienes dudan o dicen que no)</h3><ul class="small">{% for d in survey.summary.deal_breakers %}<li>{{ d }}</li>{% endfor %}</ul>{% endif %}
+    {% if survey.summary.change_mind %}<h3>Cambiarían de idea si…</h3><ul class="small">{% for d in survey.summary.change_mind %}<li>{{ d }}</li>{% endfor %}</ul>{% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <h2>Respuestas una a una <span class="muted small">· {{ answers | length }}</span></h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Agente</th><th>Papel</th><th>Elige</th><th>Intención</th><th class="num">Juster</th><th>Pagaría</th><th class="num">Máx.</th><th>Mañana</th><th>Por qué</th></tr></thead>
+    <tbody>
+    {% for a in answers %}
+      <tr>
+        <td><button class="handle-link" hx-get="/runs/{{ run_id }}/agents/{{ a.handle }}" hx-target="#drawer">@{{ a.handle }}</button><div class="muted small truncate" style="max-width: 180px">{{ a.segment }}</div></td>
+        <td>{{ a.role }}</td>
+        <td><b>{{ a.choice }}</b></td>
+        <td>{{ a.intent }}</td>
+        <td class="num">{{ a.purchase_probability }}</td>
+        <td>{{ a.would_pay }}{% if a.would_pay == "si" %} <span class="ci">({{ a.pay_certainty }}/10)</span>{% endif %}</td>
+        <td class="num">{% if a.max_price is not none %}{{ a.max_price }}{% else %}–{% endif %}</td>
+        <td class="small">{{ a.commitment }}</td>
+        <td class="small">{{ a.reason }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</section>
+{% endif %}

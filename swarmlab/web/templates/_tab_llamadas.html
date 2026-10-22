@@ -1,0 +1,44 @@
+{% if not calls.total %}
+<section class="card"><h2>Llamadas</h2><p class="muted">Sin llamadas registradas{% if cfg.get("dry_run") %} (dry-run){% endif %}.</p></section>
+{% else %}
+<div class="kpis">
+  <div class="kpi"><div class="label">Llamadas</div><div class="value">{{ calls.total }}</div><div class="sub">{{ calls.ok }} válidas · {{ calls.failed }} con error</div></div>
+  <div class="kpi"><div class="label">Tiempo de modelo</div><div class="value">{{ "%.1f" | format(calls.minutes) }}<small>min</small></div><div class="sub">media {{ "%.1f" | format(calls.avg_s) }} s · arranque {{ "%.1f" | format(calls.startup_s) }} s</div></div>
+  <div class="kpi"><div class="label">Tokens de salida</div><div class="value">{{ calls.output_tokens | num }}</div><div class="sub">{{ calls.input_tokens | num }} de entrada · {{ calls.cache_read | num }} de caché</div></div>
+  <div class="kpi"><div class="label">Coste nocional</div><div class="value">{{ "%.2f" | format(calls.cost) }}<small>$</small></div><div class="sub">lo que costaría por API; con suscripción no se factura</div></div>
+</div>
+<div class="grid two">
+  <section class="card">
+    <h2>Por modelo</h2>
+    <table><thead><tr><th>Modelo</th><th class="num">Llamadas</th><th class="num">Media</th><th class="num">Coste</th></tr></thead>
+    <tbody>{% for m in calls.by_model %}<tr><td>{{ m.name }}</td><td class="num">{{ m.n }}</td><td class="num">{{ "%.1f" | format(m.avg_s) }} s</td><td class="num">{{ "%.2f" | format(m.cost) }} $</td></tr>{% endfor %}</tbody></table>
+  </section>
+  <section class="card">
+    <h2>Por propósito</h2>
+    <table><thead><tr><th>Propósito</th><th class="num">Llamadas</th><th class="num">Media</th><th class="num">Coste</th></tr></thead>
+    <tbody>{% for m in calls.by_purpose %}<tr><td><code>{{ m.name }}</code></td><td class="num">{{ m.n }}</td><td class="num">{{ "%.1f" | format(m.avg_s) }} s</td><td class="num">{{ "%.2f" | format(m.cost) }} $</td></tr>{% endfor %}</tbody></table>
+  </section>
+</div>
+<section class="card">
+  <h2>Últimas llamadas</h2>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Hora</th><th>Propósito</th><th>Modelo</th><th>Resultado</th><th class="num">Duración</th><th class="num">Salida</th><th class="num">Coste</th></tr></thead>
+    <tbody>
+    {% for c in calls.rows %}
+    <tr>
+      <td class="small nowrap">{{ c.ts }}</td>
+      <td><code>{{ c.purpose }}</code>{% if c.attempt and c.attempt > 1 %} <span class="badge plain">intento {{ c.attempt }}</span>{% endif %}</td>
+      <td>{{ c.model }}</td>
+      <td>{% if c.outcome == "ok" %}<span class="badge st-completed">ok</span>{% else %}<span class="badge st-failed">{{ c.outcome }}</span>{% if c.error %} <span class="small muted">{{ c.error | truncate(120) }}</span>{% endif %}{% endif %}</td>
+      <td class="num">{{ "%.1f" | format(c.seconds) }} s</td>
+      <td class="num">{{ c.output_tokens | num }}</td>
+      <td class="num">{{ "%.3f" | format(c.cost) }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  <p class="muted small">El registro completo está en <a href="/runs/{{ run_id }}/files/llm_calls.jsonl" download>llm_calls.jsonl</a>.</p>
+</section>
+{% endif %}

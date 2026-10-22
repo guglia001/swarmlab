@@ -1,0 +1,16 @@
+{% if error %}
+<p class="muted small">{{ error }}</p>
+{% else %}
+<div class="kpis" style="grid-template-columns: 1fr 1fr; margin-bottom: .5rem">
+  <div class="kpi{% if est.exceeds_cap %} accent{% endif %}"><div class="label">Llamadas</div><div class="value">≈ {{ est.total_calls }}</div><div class="sub">tope {{ est.max_calls }}</div></div>
+  <div class="kpi"><div class="label">Tiempo</div><div class="value">≈ {{ "%.0f" | format(est.minutes) }}<small>min</small></div><div class="sub">{{ "%.0f" | format(est.expected_active_per_round) }} agentes activos por ronda</div></div>
+</div>
+<table class="small">
+  <tbody>
+  {% for phase, n in est.calls_by_phase.items() %}<tr><td>{{ phase }}</td><td class="num">{{ n }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+<p class="muted small">≈ {{ est.input_tokens | num }} tokens de entrada y {{ est.output_tokens | num }} de salida. Cada llamada consume cuota de tu suscripción.</p>
+{% if est.exceeds_cap %}<p class="notice warn small">Supera el tope de llamadas: la simulación se parará antes de una ronda que no quepa. Sube <code>MAX_CALLS_PER_RUN</code> o el tope del run.</p>{% endif %}
+{% if dry_run %}<p class="notice small">Dry-run: no se hará ninguna llamada real.</p>{% endif %}
+{% endif %}

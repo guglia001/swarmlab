@@ -1,0 +1,30 @@
+<div id="controls" class="actions">
+  {% if live and job == "run" %}
+  <form class="inline" method="post" action="/runs/{{ run_id }}/pause"><button class="secondary" type="submit">Pausar al acabar la ronda</button></form>
+  {% elif live %}
+  <span class="badge st-running">{{ job_label }}</span>
+  {% elif queued %}
+  <span class="badge st-queued">en cola</span>
+  {% endif %}
+  {% if resumable %}
+  <form class="inline" method="post" action="/runs/{{ run_id }}/resume"><button type="submit">Reanudar</button></form>
+  {% endif %}
+  {% if not live and not queued %}
+  <details class="menu" style="margin: 0; padding: .2rem .6rem">
+    <summary>Más acciones</summary>
+    <form method="post" action="/runs/{{ run_id }}/replicate" class="toolbar" style="margin: .4rem 0">
+      <label class="check" style="margin: 0">Réplicas <input type="number" name="n" min="1" max="10" value="2" style="width: 4.5rem"></label>
+      <label class="check" style="margin: 0"><input type="checkbox" name="same_population" value="1"> misma población</label>
+      <button class="sm" type="submit" title="Repite el run con otras semillas; se ponen en cola">Replicar</button>
+    </form>
+    <div class="toolbar" style="margin: .4rem 0">
+      <a class="btn ghost sm" href="/comparar?a={{ run_id }}">Comparar con…</a>
+      <a class="btn ghost sm" href="/scorecard?runs={{ group }}*">Scorecard del grupo</a>
+      <a class="btn ghost sm" href="/nueva?personas_from={{ run_id }}">Versión B con esta población</a>
+    </div>
+    <form method="post" action="/runs/{{ run_id }}/delete" class="toolbar" style="margin: .4rem 0" onsubmit="return confirm('¿Borrar {{ run_id }} y todos sus datos? No se puede deshacer.')">
+      <button class="danger sm" type="submit">Borrar run</button>
+    </form>
+  </details>
+  {% endif %}
+</div>

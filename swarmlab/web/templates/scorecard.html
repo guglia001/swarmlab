@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set nav = "scorecard" %}
+{% block title %}Scorecard · SwarmLab{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="grow">
+    <h1>Scorecard</h1>
+    <p class="muted">Una fila por idea: las réplicas (<code>-r2</code>, <code>-r3</code>…) se agregan como media ± desviación; los runs sueltos llevan su intervalo de Wilson. Admite ids, listas separadas por comas y patrones.</p>
+  </div>
+</div>
+<section class="card">
+  <form method="get" action="/scorecard" class="row" style="grid-template-columns: 1fr auto; align-items: end">
+    <div><label for="runs">Runs</label><input id="runs" type="text" name="runs" value="{{ spec }}" placeholder="idea*  ·  cal-*  ·  a,a-r2,b" list="run-ids"></div>
+    <div><button type="submit">Ver tabla</button></div>
+  </form>
+  <datalist id="run-ids">{% for rid in run_ids %}<option value="{{ rid }}">{% endfor %}</datalist>
+  {% if error %}<p class="error" style="margin-top:.75rem">{{ error }}</p>{% endif %}
+</section>
+{% if md %}
+<section class="card">
+  <div class="markdown">{{ md | md }}</div>
+</section>
+{% endif %}
+{% endblock %}

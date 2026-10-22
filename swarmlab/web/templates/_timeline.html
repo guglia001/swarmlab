@@ -1,0 +1,23 @@
+{% if q %}<p class="muted small">Resultados para «{{ q }}»{% if round %} en la ronda {{ round }}{% endif %}: {{ posts | length }}</p>{% endif %}
+{% for p in posts %}
+<article class="post{% if p.system %} system{% endif %}" id="post-{{ p.id }}">
+  <div>{% if p.system %}<span class="avatar" title="cuenta del sistema">!</span>{% else %}<span class="avatar">{{ p.handle[:2] | upper }}</span>{% endif %}</div>
+  <div>
+    <div class="meta">
+      {% if p.system %}<b>@{{ p.handle }}</b>{% else %}<button class="handle-link" hx-get="/runs/{{ run_id }}/agents/{{ p.handle }}" hx-target="#drawer">@{{ p.handle }}</button>{% endif %}
+      {% if p.segment %}<span class="truncate" style="max-width: 220px" title="{{ p.segment }}">{{ p.segment }}</span>{% endif %}
+      <span>· {{ p.kind }} · ronda {{ p.round }}</span>
+      {% if p.author_stance is not none %}<span>· {{ p.author_stance | stance }}</span>{% endif %}
+      <code>{{ p.id }}</code>
+    </div>
+    {% if p.parent %}
+    <div class="ctx">{% if p.kind == "reply" %}↳ responde a{% elif p.kind == "quote" %}❝ cita a{% elif p.kind == "repost" %}↻ repostea a{% else %}↳ sobre{% endif %}
+      <b>@{{ p.parent.handle }}</b> <code>{{ p.parent.id }}</code>: {{ p.parent.text | truncate(180) }}</div>
+    {% endif %}
+    {% if p.text %}<div class="text">{{ p.text }}</div>{% endif %}
+    <div class="counts"><span>♥ {{ p.likes or 0 }}</span><span>↻ {{ p.reposts or 0 }}</span><span>❝ {{ p.quotes or 0 }}</span><span>💬 {{ p.replies or 0 }}</span></div>
+  </div>
+</article>
+{% else %}
+<p class="muted">No hay posts{% if round %} en la ronda {{ round }}{% endif %}.</p>
+{% endfor %}

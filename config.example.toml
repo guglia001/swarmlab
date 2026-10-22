@@ -1,0 +1,44 @@
+# Copia este fichero como config.toml (o usa .env con las mismas claves KEY=valor).
+# Precedencia: valores por defecto < config.toml < .env < variables SWARMLAB_<CLAVE> < opciones CLI.
+
+CLAUDE_BIN = "claude"        # binario de Claude Code (debe estar logueado con tu suscripción)
+
+# Modelos por nivel (alias haiku | sonnet | opus | fable, o un id "claude-…")
+MODEL_HEAVY = "opus"         # ontología e informe final
+MODEL_MEDIUM = "sonnet"      # personas, resúmenes de ronda, narrativas, entrevistas y chat
+MODEL_LIGHT = "haiku"        # decisiones de los agentes en cada ronda y resúmenes de memoria
+# --effort por nivel (low | medium | high | xhigh | max); vacío = el del modelo.
+# EFFORT_HEAVY = "high"
+EFFORT_LIGHT = "low"         # decisiones de agentes: ~40 % más rápidas con el mismo formato válido
+
+# Postura inicial: "impresion" = se mide (cada persona lee la propuesta y da su primera impresión en
+# personaje antes de conversar; es un resultado comparable entre ideas). "cuotas" = se fija con un plan
+# (≥15 % escépticos, ≥10 % poco interesados…): garantiza objeciones, pero entonces no dice nada de la idea.
+STANCE_MODE = "impresion"
+SURVEY = false               # encuesta final de compra en personaje (elección, pago, precio, compromiso)
+REPORT_LLM = true            # false = sin narrativas ni informe del modelo pesado (runs de medición)
+LAUNCH_POST = true           # la ronda 1 empieza con el anuncio de la propuesta fijado en todos los feeds
+
+MAX_CONCURRENCY = 3          # procesos `claude -p` simultáneos (cada uno tarda ~1,5 s en arrancar)
+WEB_PARALLEL_RUNS = 2        # runs simultáneos desde el panel web (`swarmlab web`); el resto espera en cola
+AGENTS_PER_CALL = 6          # agentes que deciden en una misma llamada (1 = máxima independencia)
+MAX_CALLS_PER_RUN = 600      # tope duro de subprocesses por simulación (reintentos incluidos)
+CALL_TIMEOUT = 180           # segundos por llamada
+MAX_RETRIES = 3              # reintentos ante errores transitorios (backoff exponencial + jitter)
+SCHEMA_RETRIES = 2           # reintentos si el JSON no valida (se le devuelve el error al modelo)
+NATIVE_JSON_SCHEMA = true    # usar --json-schema del CLI; false = schema en el prompt + extracción tolerante
+
+RUNS_DIR = "runs"            # cada simulación vive en runs/<run_id>/
+FEED_SIZE = 8                # posts por feed de agente
+POST_MAX_CHARS = 280         # truncado de posts en los feeds
+MEMORY_RECENT = 8            # interacciones recientes que recuerda cada agente
+MEMORY_EVERY = 3             # cada cuántas rondas se resume la memoria a largo plazo
+MEMORY_BATCH = 10            # agentes por llamada de resumen de memoria
+PERSONA_BATCH = 8            # personas por llamada de generación
+MAX_STANCE_STEP = 0.4        # cambio máximo de postura por ronda
+DEFAULT_AGENTS = 30
+DEFAULT_ROUNDS = 8
+ROUND_INTERVAL = "1 día"     # cuánto tiempo simulado representa una ronda
+REPORT_RESERVE_CALLS = 3     # llamadas reservadas para narrativas + informe aunque se llegue al tope
+CHUNK_CHARS = 7000           # tamaño máximo de trozo del documento semilla
+DEBUG = false                # true = guarda prompts y respuestas completos en llm_calls.jsonl

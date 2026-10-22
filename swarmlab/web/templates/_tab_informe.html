@@ -1,0 +1,35 @@
+<section class="card">
+  <div class="toolbar">
+    <h2 style="margin: 0">Informe</h2>
+    <span class="grow"></span>
+    {% if report_md %}
+    <a class="btn ghost sm" href="/runs/{{ run_id }}/files/report.md" download>report.md</a>
+    <a class="btn ghost sm" href="/runs/{{ run_id }}/pdf">PDF</a>
+    {% endif %}
+    {% if dossier %}<a class="btn ghost sm" href="/runs/{{ run_id }}/files/dossier.md" download>dossier.md</a>{% endif %}
+    <a class="btn ghost sm" href="/runs/{{ run_id }}/files/metrics.json" download>metrics.json</a>
+    <a class="btn ghost sm" href="/runs/{{ run_id }}/files/personas.json" download>personas.json</a>
+  </div>
+  {% if can_report %}
+  <form method="post" action="/runs/{{ run_id }}/report" class="toolbar">
+    <label class="check" style="margin:0"><input type="checkbox" name="llm" value="1"{% if cfg.get("report_llm", True) %} checked{% endif %}> con el modelo pesado (narrativas + informe con citas)</label>
+    <button class="secondary sm" type="submit">{% if report_md %}Regenerar informe{% else %}Generar informe{% endif %}</button>
+    <span class="muted small">sin marcar: informe determinista, sin llamadas</span>
+  </form>
+  {% endif %}
+  {% if report_md %}
+  <div class="markdown">{{ report_md | md }}</div>
+  {% else %}
+  <p class="muted">Todavía no hay informe{% if live %}: se escribe al terminar la simulación{% endif %}.</p>
+  {% endif %}
+</section>
+{% if charts %}
+<section class="card">
+  <h2>Gráficas del informe</h2>
+  <div class="grid three">
+    {% for file, label, version in charts %}
+    <figure style="margin:0"><img src="/runs/{{ run_id }}/charts/{{ file }}?v={{ version }}" alt="{{ label }}" loading="lazy" style="width:100%; border:1px solid var(--line); border-radius:6px"><figcaption class="muted small">{{ label }}</figcaption></figure>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

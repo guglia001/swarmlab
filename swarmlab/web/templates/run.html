@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% set nav = "panel" %}
+{% block title %}{{ run_id }} · SwarmLab{% endblock %}
+{% block content %}
+<div id="run-page" data-run-id="{{ run_id }}" data-status="{{ meta.status }}" data-round="{{ meta.current_round or 0 }}">
+<div class="page-head">
+  <div class="grow">
+    <h1>{{ title }}</h1>
+    <p class="muted small">
+      <code>{{ run_id }}</code>
+      {% if cfg.get("dry_run") %} · <span class="badge plain">dry-run</span>{% endif %}
+      {% if cfg.get("replica_of") %} · réplica de <a href="/runs/{{ cfg.replica_of }}">{{ cfg.replica_of }}</a>{% endif %}
+      {% if cfg.get("personas_from") %} · misma población que <a href="/runs/{{ cfg.personas_from }}">{{ cfg.personas_from }}</a>{% endif %}
+      · {{ cfg.get("n_agents") }} agentes × {{ cfg.get("rounds") }} rondas · {{ "red social" if cfg.get("platform") == "twitter" else cfg.get("platform") }}
+      · postura inicial {{ "medida (primera impresión)" if cfg.get("stance_mode") == "impresion" else "fijada por cuotas" }}
+      · semilla {{ cfg.get("seed_name") }} · rng {{ cfg.get("rng_seed") }}
+    </p>
+    {% if cfg.get("question") %}<p class="small"><b>Pregunta:</b> {{ cfg.get("question") }}</p>{% endif %}
+  </div>
+  {% include "_controls.html" %}
+</div>
+
+<section class="card" id="status">
+  <div class="status-bar">
+    <span>Estado: <span id="st-status" class="badge st-{{ status_key }}">{{ status_label }}</span></span>
+    <span>Etapa: <b id="st-stage">{{ stage_labels.get(meta.stage, meta.stage) or "—" }}</b></span>
+    <span>Ronda: <b id="st-round">{{ meta.current_round or 0 }}/{{ cfg.get("rounds") }}</b></span>
+    <span>Llamadas: <b id="st-calls">{{ meta.calls_used or 0 }}</b> <span class="muted">de {{ cfg.get("max_calls") }}</span></span>
+    <span>Motivo de pausa: <b id="st-pause">{{ meta.pause_reason or "—" }}</b></span>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="st-bar" style="width: {{ progress }}%"></span></div>
+  <div id="log"></div>
+</section>
+
+{% if kpis %}
+<div class="kpis">
+  {% for k in kpis %}
+  <div class="kpi"><div class="label">{{ k.label }}</div><div class="value">{{ k.value }}</div>{% if k.sub %}<div class="sub">{{ k.sub }}</div>{% endif %}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<nav class="tabs" aria-label="Pestañas del run">
+  {% for key, label, count in tabs %}
+  <a href="/runs/{{ run_id }}?tab={{ key }}" data-tab="{{ key }}" data-url="/runs/{{ run_id }}/tab/{{ key }}"{% if key == tab %} class="active"{% endif %}>{{ label }}{% if count is not none %}<span class="count">{{ count }}</span>{% endif %}</a>
+  {% endfor %}
+</nav>
+<div id="tab-content" hx-get="/runs/{{ run_id }}/tab/{{ tab }}" hx-trigger="load, refresh" hx-swap="innerHTML">
+  <p class="muted">Cargando…</p>
+</div>
+</div>
+{% endblock %}

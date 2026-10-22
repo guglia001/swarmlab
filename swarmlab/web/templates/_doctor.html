@@ -1,0 +1,12 @@
+<table class="small" style="margin-top: .75rem">
+  <tbody>
+  {% for c in report.checks %}
+  <tr>
+    <td style="width: 1.5rem">{% if c.ok %}<span class="badge st-completed plain">ok</span>{% elif c.warn %}<span class="badge st-paused plain">aviso</span>{% else %}<span class="badge st-failed plain">fallo</span>{% endif %}</td>
+    <td><b>{{ c.name }}</b></td>
+    <td class="muted">{{ c.detail }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if report.version %}<p class="muted small">Claude Code {{ report.version }}{% if report.flags_missing %} · flags que faltan: {{ report.flags_missing | join(", ") }}{% endif %}</p>{% endif %}

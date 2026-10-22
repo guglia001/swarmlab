@@ -1,0 +1,22 @@
+<section class="card">
+  <h2>Feed de la red social simulada</h2>
+  <form class="toolbar" hx-get="/runs/{{ run_id }}/timeline" hx-target="#timeline" hx-trigger="change, submit">
+    <select name="round" aria-label="Ronda">
+      <option value="">Todas las rondas</option>
+      {% for r in round_choices %}<option value="{{ r }}"{% if loop.last %} selected{% endif %}>Ronda {{ r }}</option>{% endfor %}
+    </select>
+    <select name="kind" aria-label="Tipo">
+      <option value="">Todo</option>
+      {% for k, label in [("post", "posts"), ("reply", "respuestas"), ("quote", "citas"), ("repost", "reposts"), ("event", "eventos")] %}<option value="{{ k }}">{{ label }}</option>{% endfor %}
+    </select>
+    <select name="sort" aria-label="Orden">
+      <option value="">Cronológico</option>
+      <option value="eco">Más eco primero</option>
+    </select>
+    <input type="search" name="q" placeholder="Buscar en los posts…" aria-label="Buscar">
+    <button class="secondary sm" type="submit">Filtrar</button>
+  </form>
+  <div id="timeline" hx-get="/runs/{{ run_id }}/timeline?round={{ round_choices[-1] if round_choices else '' }}" hx-trigger="load" hx-swap="innerHTML">
+    <p class="muted">Cargando…</p>
+  </div>
+</section>
